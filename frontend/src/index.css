@@ -1,0 +1,228 @@
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap');
+
+@import "tailwindcss";
+
+
+:root {
+  font-family: "DM Sans", Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --font-dm-sans: "DM Sans", Arial, sans-serif;
+  --font-fraunces: "Fraunces", "Times New Roman", serif;
+
+  color-scheme: light;
+
+  --color-bg: #ffffff;
+  --color-section: #d7f0fc;
+  --color-surface: #ffffff;
+  --color-surface-raised: #edf8fd;
+
+  --color-primary: #0787ad;
+  --color-primary-hover: #067596;
+
+  --color-text: #123153;
+  --color-text-muted: #526b82;
+  --color-border: #c5e3f2;
+
+  --glass-bg: rgb(255 255 255 / 72%);
+  --glass-border: rgb(255 255 255 / 80%);
+  --glass-blur: 18px;
+
+  --shadow-card: 0 8px 28px rgb(18 49 83 / 7%);
+  --page-padding: 32px;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+
+  --transition-fast: 160ms ease;
+  --transition-normal: 240ms ease;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-bg: #0b1726;
+  --color-section: #102338;
+  --color-surface: #12263a;
+  --color-surface-raised: #172e45;
+
+  --color-primary: #16a5d1;
+  --color-primary-hover: #48c5e9;
+
+  --color-text: #f1f7fc;
+  --color-text-muted: #b3c8d9;
+  --color-border: #29445d;
+
+  --glass-bg: rgb(23 46 69 / 76%);
+  --glass-border: rgb(179 200 217 / 15%);
+  --glass-blur: 18px;
+
+  --shadow-card: 0 12px 32px rgb(0 0 0 / 18%);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-dm-sans);
+  transition:
+    background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+h1,
+h2,
+h3,
+.display-heading {
+  font-family: var(--font-fraunces);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --page-padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-dm-sans);
+}
+
+h1,
+h2,
+h3,
+.display-heading {
+  font-family: var(--font-fraunces);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+::selection {
+  color: #ffffff;
+  background: var(--color-primary);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --page-padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+/* CampusOne two-tone wordmark */
+.brand-campus {
+  color: #ffffff;
+}
+
+.brand-one {
+  color: #16a5d1;
+}
+
+/* Keep the wordmark readable in light mode */
+:root[data-theme='light'] .brand-campus {
+  color: #123153;
+}
+
+:root[data-theme='light'] .brand-one {
+  color: #0787ad;
+}
+
+/* Blinking cursor for the hero typing animation */
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  margin-left: 4px;
+  vertical-align: -0.04em;
+  background: currentColor;
+  animation: campusone-cursor-blink 0.8s steps(2, start) infinite;
+}
+
+@keyframes campusone-cursor-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typing-cursor {
+    animation: none;
+  }
+}
