@@ -13,14 +13,18 @@ import SuperAdminCollegesPage from './pages/SuperAdminCollegesPage'
 import SuperAdminLayout from './layouts/SuperAdminLayout'
 import SuperAdminCollegeDetailsPage from './pages/SuperAdminCollegeDetailsPage'
 import SuperAdminSubscriptionsPage from './pages/SuperAdminSubscriptionsPage'
-
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import TermsAndConditionsPage from './pages/TermsAndConditionsPage'
+import HelpCenterPage from './pages/HelpCenterPage'
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         {/* Public landing page */}
         <Route path="/" element={<LandingPage />} />
-
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditionsPage />} />
+        <Route path="/help" element={<HelpCenterPage />} />
         {/* Public authentication routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route

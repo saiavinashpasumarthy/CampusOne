@@ -27,9 +27,11 @@ import {
   UserRound,
   Wrench,
   Clock,
+  Mail,
+  Phone,
 } from 'lucide-react'
 import { useTheme } from '../context/useTheme'
-
+import campusHero from '../assets/campusone-hero.png'
 const platformItems = [
   { title: 'Hostel admissions', description: 'Applications and approval workflows', icon: ClipboardCheck, href: '#admissions' },
   { title: 'Room allocation', description: 'Room availability and occupancy', icon: DoorOpen, href: '#rooms' },
@@ -48,7 +50,7 @@ const roleItems = [
 
 const resourceItems = [
   { title: 'Help and FAQs', description: 'Answers to common questions', icon: HelpCircle, href: '#faqs' },
-  { title: 'Privacy policy', description: 'How personal information is handled', icon: ShieldCheck, href: '#privacy' },
+  { title: 'Privacy policy', description: 'Privacy, Data protection and cookie information', icon: ShieldCheck, href: '#privacy' },
   { title: 'Terms and conditions', description: 'Platform usage and responsibilities', icon: FileText, href: '#terms' },
   { title: 'Feedback', description: 'Share ideas and suggestions', icon: MessageSquare, href: '#feedback' },
 ]
@@ -266,10 +268,18 @@ useEffect(() => {
     <main className="min-h-screen overflow-x-clip">
       {/* NAVIGATION */}
       <header className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--glass-bg)] backdrop-blur-xl">
-        <div className="mx-auto flex min-h-[76px] max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex min-h-[76px] w-full items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
           <Link
             to="/"
-            onClick={closeNavigation}
+            onClick={() => {
+    closeNavigation()
+    window.setTimeout(() => {
+      document.getElementById('hero')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }, 50)
+  }}
             className="flex shrink-0 items-center gap-2.5"
           >
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary)] text-white shadow-lg">
@@ -278,11 +288,18 @@ useEffect(() => {
            <span className="text-lg font-bold tracking-tight sm:text-3xl">
   <span className="brand-campus">Campus</span>
   <span className="brand-one">One</span>
-  <span className="ml-1 text-[var(--color-primary)]">.</span>
+  <span className="ml-1 text-(--color-primary)">.</span>
 </span>
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+            <a
+              href="#why-campusone"
+              onClick={closeNavigation}
+              className="rounded-lg px-3 py-2 text-sm font-medium text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-text)]"
+            >
+              Why CampusOne
+            </a>
             <DropdownMenu
               label="Platform"
               items={platformItems}
@@ -329,7 +346,7 @@ useEffect(() => {
             </Link>
 
             <a
-              href="#pricing"
+              href="#contact"
               className="hidden items-center gap-2 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:opacity-90 sm:inline-flex"
             >
               Talk to us <ArrowUpRight size={16} />
@@ -400,110 +417,79 @@ useEffect(() => {
         )}
       </header>
 
-      {/* HERO */}
-      <section className="relative isolate px-5 py-20 sm:px-8 sm:py-24 lg:px-12 lg:py-32">
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute -right-32 -top-20 h-96 w-96 rounded-full bg-[var(--color-primary)] opacity-[0.09] blur-3xl" />
-          <div className="absolute -left-32 bottom-0 h-72 w-72 rounded-full bg-[var(--color-primary)] opacity-[0.06] blur-3xl" />
-        </div>
-
-        <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.08fr_0.92fr]">
-          <div>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--glass-bg)] px-4 py-2 text-sm font-medium backdrop-blur-lg">
-              <span className="h-2 w-2 rounded-full bg-[var(--color-primary)]" />
-              A smarter way to manage campus living
-            </div>
-
-            <h1
-  className="display-heading max-w-3xl text-5xl font-semibold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl"
-  aria-label="Hostel operations, finally in sync."
+            {/* HERO */}
+      <section
+  id="hero"
+  className="relative isolate flex min-h-[calc(100svh-76px)] items-center overflow-hidden bg-[#eaf1fa] text-[#182433] transition-colors duration-500 dark:bg-[#101b2b] dark:text-white"
+  style={{
+    backgroundImage: `url(${campusHero})`,
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+  }}
 >
-  <span>
-    {typedHeadline.slice(0, Math.min(typedHeadline.length, 18))}
-  </span>
+  {/* Background overlays */}
+  <div className="absolute inset-0 -z-10 bg-[#eaf1fa]/35 transition-colors duration-500 dark:bg-[#101b2b]/30" />
 
-  {typedHeadline.length > 18 && (
-    <span className="mt-2 block text-[var(--color-primary)]">
-      {typedHeadline.slice(18)}
-    </span>
-  )}
+  <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#eaf1fa]/95 via-[#eaf1fa]/75 to-[#eaf1fa]/20 transition-all duration-500 dark:from-[#101b2b]/75 dark:via-[#101b2b]/35 dark:to-[#101b2b]/10" />
 
-  <span className="typing-cursor" aria-hidden="true" />
-</h1>
+  <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#eaf1fa]/65 via-transparent to-[#eaf1fa]/20 transition-all duration-500 dark:from-[#101b2b]/70 dark:to-[#101b2b]/10" />
 
-            <p className="mt-7 max-w-xl text-base leading-8 text-[var(--color-text-muted)] sm:text-lg">
-              Bring admissions, rooms, fees, leave requests and everyday hostel operations into one organized workspace built for institutions.
-            </p>
+  <div className="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
+    <div className="max-w-3xl">
+      {/* Badge */}
+      <div className="inline-flex animate-[fadeInUp_0.7s_ease-out_both] items-center gap-2 rounded-full border border-[#182433]/15 bg-white/55 px-4 py-2 text-xs font-semibold tracking-wide text-[#182433] shadow-sm backdrop-blur-xl transition-colors duration-500 dark:border-white/20 dark:bg-white/10 dark:text-white/90 sm:text-sm">
+        <span className="h-2 w-2 animate-pulse rounded-full bg-[#2585e8] dark:bg-[#65b5ff]" />
+        A smarter way to manage campus living
+      </div>
 
-            <div className="mt-9 flex flex-wrap gap-3">
-              <a
-                href="#pricing"
-                className="inline-flex items-center gap-2 rounded-xl bg-[var(--color-primary)] px-6 py-3.5 font-semibold text-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl"
-              >
-                Explore institutional plans <ArrowRight size={18} />
-              </a>
-              <a
-                href="#platform"
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--glass-bg)] px-6 py-3.5 font-semibold backdrop-blur-lg transition-all hover:border-[var(--color-primary)]"
-              >
-                Explore platform <ArrowDownRight size={18} />
-              </a>
-            </div>
+      {/* Heading */}
+      <h1
+        className="display-heading mt-6 max-w-3xl text-5xl font-semibold leading-[1.08] tracking-tight text-[#182433] transition-colors duration-500 dark:text-white sm:text-6xl lg:text-7xl"
+        aria-label="Hostel operations, finally in sync."
+      >
+        <span>
+          {typedHeadline.slice(0, Math.min(typedHeadline.length, 18))}
+        </span>
 
-            <div className="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-sm text-[var(--color-text-muted)]">
-              <span className="flex items-center gap-2"><Check size={16} className="text-[var(--color-primary)]" /> Three role-based experiences</span>
-              <span className="flex items-center gap-2"><Check size={16} className="text-[var(--color-primary)]" /> Centralized operations</span>
-            </div>
-          </div>
+        {typedHeadline.length > 18 && (
+          <span className="mt-2 block text-[#2478d4] dark:text-[var(--color-primary)]">
+            {typedHeadline.slice(18)}
+          </span>
+        )}
+      </h1>
 
-          <div className="relative">
-            <div className="absolute -inset-3 rounded-[32px] bg-[var(--color-primary)] opacity-[0.08] blur-2xl" />
-            <div className="relative rounded-[28px] border border-[var(--glass-border)] bg-[var(--glass-bg)] p-4 shadow-2xl backdrop-blur-2xl sm:p-6">
-              <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-muted)]">
-                      Campus overview
-                    </p>
-                    <h2 className="display-heading mt-2 text-2xl sm:text-3xl">One connected workspace</h2>
-                  </div>
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--color-section)] text-[var(--color-primary)]">
-                    <Building2 size={23} />
-                  </span>
-                </div>
+      {/* Description */}
+      <p className="mt-7 max-w-2xl animate-[fadeInUp_0.8s_ease-out_0.2s_both] text-base leading-8 text-[#34465c] transition-colors duration-500 dark:text-white/80 sm:text-lg">
+        Connect administration, hostel management and mess operations
+        through one organized platform. Less paperwork, clearer
+        workflows and a better campus experience for everyone.
+      </p>
 
-                <div className="mt-6 grid grid-cols-2 gap-3">
-                  {[
-                    { label: 'Admissions', status: 'Review applications', icon: ClipboardCheck },
-                    { label: 'Room allocation', status: 'Manage occupancy', icon: DoorOpen },
-                    { label: 'Fee records', status: 'Track payments', icon: Wallet },
-                    { label: 'Requests', status: 'Review and respond', icon: FileText },
-                  ].map(({ label, status, icon: Icon }) => (
-                    <div key={label} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-4 transition-transform duration-200 hover:-translate-y-1">
-                      <Icon size={19} className="text-[var(--color-primary)]" />
-                      <p className="mt-4 text-sm font-semibold">{label}</p>
-                      <p className="mt-1 text-xs leading-5 text-[var(--color-text-muted)]">{status}</p>
-                    </div>
-                  ))}
-                </div>
+      {/* Actions */}
+      <div className="mt-9 flex flex-wrap gap-4 animate-[fadeInUp_0.8s_ease-out_0.3s_both]">
+        <Link
+          to="/login"
+          className="inline-flex items-center gap-2 rounded-xl border border-[#2478d4] bg-[#2478d4] px-6 py-3.5 font-semibold text-white shadow-lg shadow-[#2478d4]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#1766bd] dark:border-white/30 dark:bg-white/10 dark:text-white dark:shadow-none dark:backdrop-blur-xl dark:hover:bg-white/20"
+        >
+          Get Started <ArrowRight size={18} />
+        </Link>
 
-                <div className="mt-4 flex items-center gap-3 rounded-xl border border-[var(--color-border)] p-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-section)] text-[var(--color-primary)]">
-                    <Users size={20} />
-                  </span>
-                  <div>
-                    <p className="text-sm font-semibold">One place for every role</p>
-                    <p className="mt-1 text-xs text-[var(--color-text-muted)]">Students · Wardens · Administrators</p>
-                  </div>
-                </div>
-              </div>
-              <p className="px-2 pb-1 pt-4 text-center text-xs text-[var(--color-text-muted)]">
-                Product preview · Illustrative interface, not live institution data
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+        <a
+          href="#platform"
+          className="inline-flex items-center gap-2 rounded-xl border border-[#182433]/20 bg-white/45 px-6 py-3.5 font-semibold text-[#182433] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/70 dark:border-white/30 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+        >
+          Explore CampusOne <ArrowDownRight size={18} />
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {/* Scroll indicator */}
+  <div className="pointer-events-none absolute bottom-5 left-1/2 hidden -translate-x-1/2 items-center gap-2 text-xs tracking-widest text-[#182433]/60 transition-colors duration-500 dark:text-white/55 md:flex">
+    <span className="h-8 w-px bg-[#182433]/40 dark:bg-white/40" />
+    SCROLL TO EXPLORE
+  </div>
+</section>
 
       {/* WHY CAMPUSONE */}
       <section id="why-campusone" className="px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
@@ -606,59 +592,144 @@ useEffect(() => {
       </section>
 
       {/* PRICING PREVIEW */}
-      <section id="pricing" className="bg-[var(--color-section)] px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_0.9fr]">
-          <div>
-            <SectionHeading
-              eyebrow="Institutional pricing"
-              title="A plan that fits your institution."
-              description="CampusOne subscriptions are intended for colleges and hostel-management institutions, with monthly and annual billing options."
-            />
-            <p className="mt-5 text-sm leading-7 text-[var(--color-text-muted)]">
-              Final plan prices, included capacity, feature limits and billing terms are still to be defined. We'll publish those details before subscriptions become available.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href="#feedback" className="inline-flex items-center gap-2 rounded-xl bg-[var(--color-primary)] px-6 py-3.5 font-semibold text-white transition-all hover:-translate-y-0.5">
-                Discuss your requirements <ArrowRight size={17} />
-              </a>
-              <a href="#faqs" className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-3.5 font-semibold">
-                Read FAQs
-              </a>
-            </div>
+      <section
+  id="pricing"
+  className="bg-[var(--color-section)] px-5 py-20 sm:px-8 sm:py-24 lg:px-12"
+>
+  <div className="mx-auto max-w-7xl">
+    <div className="mx-auto max-w-2xl text-center">
+      <SectionHeading
+        eyebrow="Institutional pricing"
+        title="Simple plans. Smarter campus management."
+        description="Choose a CampusOne subscription that suits your institution. Paid plans include a 30-day free trial."
+      />
+    </div>
+
+    <div className="mt-14 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+      {[
+        {
+          name: 'FREE',
+          description: 'Get started with CampusOne.',
+          monthly: '₹0',
+          annual: '₹0',
+          trial: false,
+          featured: false,
+        },
+        {
+          name: 'BASIC',
+          description: 'For institutions getting started.',
+          monthly: '₹299',
+          annual: '₹2,999',
+          trial: true,
+          featured: false,
+        },
+        {
+          name: 'PRO',
+          description: 'For institutions ready to grow.',
+          monthly: '₹499',
+          annual: '₹5,499',
+          trial: true,
+          featured: true,
+        },
+        {
+          name: 'ENTERPRISE',
+          description: 'For institutions seeking an advanced plan.',
+          monthly: '₹799',
+          annual: '₹9,499',
+          trial: true,
+          featured: false,
+        },
+      ].map((plan) => (
+        <div
+          key={plan.name}
+          className={`relative flex flex-col rounded-3xl border p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${
+            plan.featured
+              ? 'border-[var(--color-primary)] bg-[var(--color-surface)] shadow-lg shadow-[var(--color-primary)]/10'
+              : 'border-[var(--color-border)] bg-[var(--color-surface)]'
+          }`}
+        >
+          {plan.featured && (
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--color-primary)] px-4 py-1.5 text-xs font-bold tracking-wide text-white">
+              MOST POPULAR
+            </span>
+          )}
+
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="display-heading text-xl font-bold">
+              {plan.name}
+            </h3>
+
+            {plan.trial && (
+              <span className="rounded-full bg-[var(--color-primary)]/10 px-3 py-1 text-[10px] font-bold text-[var(--color-primary)]">
+                30-DAY TRIAL
+              </span>
+            )}
           </div>
 
-          <div className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-xl sm:p-8">
-            <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--color-section)] text-[var(--color-primary)]">
-                <Building2 size={25} />
-              </span>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-muted)]">For institutions</p>
-                <h3 className="display-heading mt-1 text-2xl font-semibold">CampusOne plans</h3>
-              </div>
+          <p className="mt-3 min-h-12 text-sm leading-6 text-[var(--color-text-muted)]">
+            {plan.description}
+          </p>
+
+          <div className="my-7 space-y-4">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+                Monthly billing
+              </p>
+              <p className="mt-1 text-3xl font-bold tracking-tight">
+                {plan.monthly}
+                <span className="ml-1 text-sm font-medium text-[var(--color-text-muted)]">
+                  /month
+                </span>
+              </p>
             </div>
-            <div className="my-7 space-y-4">
-              {[
-                'Monthly subscription option',
-                'Annual subscription option',
-                'Plan scope based on institutional requirements',
-                'Core hostel workflows in one platform',
-              ].map((item) => (
-                <div key={item} className="flex items-start gap-3 text-sm">
-                  <Check size={18} className="mt-0.5 shrink-0 text-[var(--color-primary)]" />
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
-            <div className="rounded-xl border border-dashed border-[var(--color-border)] p-4">
-              <p className="font-semibold">Pricing announcement coming later</p>
-              <p className="mt-1 text-sm leading-6 text-[var(--color-text-muted)]">
-                Contact options, actual prices and plan comparisons will be added when the subscription model is finalized.
+
+            <div className="border-t border-[var(--color-border)] pt-4">
+              <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+                Annual billing
+              </p>
+              <p className="mt-1 text-2xl font-bold tracking-tight">
+                {plan.annual}
+                <span className="ml-1 text-sm font-medium text-[var(--color-text-muted)]">
+                  /year
+                </span>
               </p>
             </div>
           </div>
+
+          <div className="mt-auto">
+            <div className="mb-5 flex items-center gap-2 text-sm text-[var(--color-text-muted)]">
+              <Check
+                size={17}
+                className="shrink-0 text-[var(--color-primary)]"
+              />
+              {plan.trial
+                ? '30-day free trial included'
+                : 'Free plan — no trial required'}
+            </div>
+
+            <a
+              href="#contact"
+              className={`inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 ${
+                plan.featured
+                  ? 'bg-[var(--color-primary)] text-white hover:opacity-90'
+                  : 'border border-[var(--color-border)] bg-[var(--color-section)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]'
+              }`}
+            >
+              {plan.name === 'FREE' ? 'Get started' : 'Choose plan'}
+              <ArrowRight size={16} />
+            </a>
+          </div>
         </div>
-      </section>
+      ))}
+    </div>
+
+    <p className="mx-auto mt-8 max-w-3xl text-center text-xs leading-6 text-[var(--color-text-muted)]">
+      All prices are in INR. Paid subscriptions include a 30-day free trial.
+      Plan-specific features, capacity limits and billing conditions will be
+      displayed once finalized.
+    </p>
+  </div>
+</section>
 
       {/* FAQ */}
       <section id="faqs" className="px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
@@ -712,15 +783,35 @@ useEffect(() => {
                 <Icon size={23} className="text-[var(--color-primary)]" />
                 <h3 className="mt-5 text-lg font-semibold">{title}</h3>
                 <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">{text}</p>
-                {id === 'feedback' ? (
-                  <a href="mailto:feedback@campusone.example" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)]">
-                    Feedback form coming soon <ArrowRight size={15} />
-                  </a>
-                ) : (
-                  <span className="mt-5 inline-flex items-center gap-2 text-xs font-medium text-[var(--color-text-muted)]">
-                    Dedicated page coming soon
-                  </span>
-                )}
+                {id === 'privacy' ? (
+  <Link
+    to="/privacy-policy"
+    className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)]"
+  >
+    Read privacy policy <ArrowRight size={15} />
+  </Link>
+) : id === 'feedback' ? (
+  <a
+    href="mailto:feedback@campusone.example"
+    className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)]"
+  >
+    Provide feedback <ArrowRight size={15} />
+  </a>
+) : id === 'terms' ? (
+  <Link
+    to="/terms-and-conditions"
+    className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)]"
+  >
+    Read terms and conditions <ArrowRight size={15} />
+  </Link>
+) : id === 'help' ? (
+  <Link
+    to="/help"
+    className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)]"
+  >
+    Visit help center <ArrowRight size={15} />
+  </Link>
+) : null}
               </article>
             ))}
           </div>
@@ -728,24 +819,63 @@ useEffect(() => {
       </section>
 
       {/* FINAL CTA */}
-      <section className="px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
-        <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-[var(--color-primary)] px-6 py-12 text-white sm:px-12 sm:py-16">
-          <div className="grid items-center gap-8 md:grid-cols-[1fr_auto]">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/75">Let's get organized</p>
-              <h2 className="display-heading mt-4 max-w-2xl text-3xl font-semibold leading-tight sm:text-5xl">
-                Bring your hostel workflows together.
-              </h2>
-              <p className="mt-4 max-w-xl leading-7 text-white/80">
-                Explore how CampusOne could fit your institution's operations.
-              </p>
-            </div>
-            <a href="#pricing" className="inline-flex items-center justify-center gap-2 self-start rounded-xl bg-white px-6 py-3.5 font-semibold text-[var(--color-primary)] transition-transform hover:-translate-y-1">
-              Explore plans <ArrowRight size={17} />
+      {/* CONTACT SECTION */}
+<section id="contact" className="px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
+  <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-12 sm:px-12 sm:py-16">
+    <div className="grid items-center gap-12 md:grid-cols-[1fr_1fr]">
+      <div>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--color-primary)]">
+          Get in touch
+        </p>
+
+        <h2 className="display-heading mt-4 max-w-xl text-3xl font-semibold leading-tight text-[var(--color-text)] sm:text-5xl">
+          Let's make campus life simpler.
+        </h2>
+
+        <p className="mt-5 max-w-xl leading-7 text-[var(--color-muted)]">
+          Have questions about CampusOne or want to explore how it can support
+          your institution? We'd love to hear from you.
+        </p>
+      </div>
+
+      <div className="grid gap-4">
+        <div className="flex items-center gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-5">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+            <Mail size={22} />
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-[var(--color-muted)]">
+              Email us
+            </p>
+            <a
+              href="mailto:saiavinashpasumarthy2005@gmail.com"
+              className="mt-1 block break-all font-semibold text-[var(--color-text)] transition-colors hover:text-[var(--color-primary)]"
+            >
+              saiavinashpasumarthy2005@gmail.com
             </a>
           </div>
         </div>
-      </section>
+
+        <div className="flex items-center gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-5">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+            <Phone size={22} />
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-[var(--color-muted)]">
+              Call us
+            </p>
+            <a
+              href="tel:+91 8179263417"
+              className="mt-1 block font-semibold text-[var(--color-text)] transition-colors hover:text-[var(--color-primary)]"
+            >
+              +91 8179263417
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* FOOTER */}
       <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] px-5 pb-8 pt-14 sm:px-8 lg:px-12">
@@ -788,7 +918,7 @@ useEffect(() => {
               <ul className="mt-4 space-y-3">
                 <li><a href="#pricing" className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-primary)]">Pricing</a></li>
                 <li><Link to="/login" className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-primary)]">Log in</Link></li>
-                <li><a href="#feedback" className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-primary)]">Contact and feedback</a></li>
+                <li><a href="#contact" className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-primary)]">Contact Us</a></li>
                 <li><a href="#faqs" className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-primary)]">FAQs</a></li>
               </ul>
             </div>
@@ -797,7 +927,9 @@ useEffect(() => {
           <div className="mt-12 flex flex-col gap-3 border-t border-[var(--color-border)] pt-6 text-xs text-[var(--color-text-muted)] sm:flex-row sm:items-center sm:justify-between">
             <p>© {new Date().getFullYear()} CampusOne. All rights reserved.</p>
             <div className="flex flex-wrap gap-5">
-              <a href="#privacy" className="hover:text-[var(--color-primary)]">Privacy</a>
+              <Link to="/privacy-policy" className="hover:text-[var(--color-primary)]">
+  Privacy Policy
+</Link>
               <a href="#terms" className="hover:text-[var(--color-primary)]">Terms</a>
               <a href="#feedback" className="hover:text-[var(--color-primary)]">Feedback</a>
             </div>
