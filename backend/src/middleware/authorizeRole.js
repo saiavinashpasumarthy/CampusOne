@@ -1,3 +1,4 @@
+
 import User from '../models/user.js'
 import College from '../models/college.js'
 
@@ -14,7 +15,7 @@ export function authorizeRole(...allowedRoles) {
       const user = await User.findOne({
         firebaseUid: req.user.uid,
       })
-        .select('role status collegeId')
+        .select('_id firebaseUid name email role status collegeId')
         .lean()
 
       if (!user) {
@@ -24,7 +25,6 @@ export function authorizeRole(...allowedRoles) {
         })
       }
 
-      // Verify the user's CampusOne account.
       if (user.status !== 'ACTIVE') {
         return res.status(403).json({
           success: false,
@@ -32,7 +32,6 @@ export function authorizeRole(...allowedRoles) {
         })
       }
 
-      // Verify the user's role before continuing.
       if (!allowedRoles.includes(user.role)) {
         return res.status(403).json({
           success: false,
@@ -40,8 +39,8 @@ export function authorizeRole(...allowedRoles) {
         })
       }
 
-      // Super Admin accounts are platform-wide and have no collegeId.
-      // All other roles must belong to an active college.
+      let college = null
+
       if (user.role !== 'SUPER_ADMIN') {
         if (!user.collegeId) {
           return res.status(403).json({
@@ -50,8 +49,8 @@ export function authorizeRole(...allowedRoles) {
           })
         }
 
-        const college = await College.findById(user.collegeId)
-          .select('status')
+        college = await College.findById(user.collegeId)
+          .select('_id status')
           .lean()
 
         if (!college) {
@@ -69,9 +68,16 @@ export function authorizeRole(...allowedRoles) {
         }
       }
 
-      // Attach verified CampusOne authorization context.
-      req.user.role = user.role
-      req.user.collegeId = user.collegeId?.toString() ?? null
+      req.user = {
+        ...req.user,
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+        collegeId: user.collegeId?.toString() ?? null,
+      }
+
       req.campusOneUser = user
 
       return next()

@@ -16,12 +16,15 @@ const userSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
-
+    name: {
+  type: String,
+  required: true,
+  trim: true,
+},
     role: {
       type: String,
       enum: [
         'SUPER_ADMIN',
-        'COLLEGE_OWNER',
         'COLLEGE_ADMIN',
         'WARDEN',
         'STUDENT',

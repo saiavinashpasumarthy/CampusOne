@@ -16,6 +16,7 @@ import SuperAdminSubscriptionsPage from './pages/SuperAdminSubscriptionsPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsAndConditionsPage from './pages/TermsAndConditionsPage'
 import HelpCenterPage from './pages/HelpCenterPage'
+import SuperAdminUsersPage from './pages/SuperAdminUsersPage'
 export default function App() {
   return (
     <BrowserRouter>
@@ -74,14 +75,9 @@ export default function App() {
             />
 
             <Route
-              path="users"
-              element={
-                <RoutePlaceholder
-                  title="Platform users"
-                  description="Platform user management will be implemented here."
-                />
-              }
-            />
+  path="users"
+  element={<SuperAdminUsersPage />}
+/>
 
             <Route
               path="activity-logs"

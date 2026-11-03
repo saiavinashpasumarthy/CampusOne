@@ -26,7 +26,7 @@ export async function authenticate(req, res, next) {
 
     const user = await User.findOne({
       firebaseUid: decodedToken.uid,
-    })
+    }).select('_id name email role collegeId status')
 
     if (!user) {
       return res.status(403).json({
@@ -41,28 +41,35 @@ export async function authenticate(req, res, next) {
         message: 'Your CampusOne account is not active.',
       })
     }
+
     req.user = {
-  _id: user._id,
-  uid: decodedToken.uid,
-  email: decodedToken.email ?? user.email,
-  emailVerified: decodedToken.email_verified ?? false,
-  role: user.role,
-  collegeId: user.collegeId,
-  status: user.status,
-}
+      _id: user._id,
+      uid: decodedToken.uid,
+      name: user.name,
+      email: decodedToken.email ?? user.email,
+      emailVerified: decodedToken.email_verified ?? false,
+      role: user.role,
+      collegeId: user.collegeId,
+      status: user.status,
+    }
+
     return next()
   } catch (error) {
-  console.error('Authentication middleware error:', error)
+    console.error('Authentication middleware error:', error)
 
-  if (error.code === 'auth/id-token-expired' ||
+    if (
+      error.code === 'auth/id-token-expired' ||
       error.code === 'auth/argument-error' ||
-      error.code === 'auth/invalid-id-token') {
-    return res.status(401).json({
-      success: false,
-      message: 'Invalid or expired authentication token.',
-    })
-  }
+      error.code === 'auth/invalid-id-token' ||
+      error.code === 'auth/user-disabled' ||
+      error.code === 'auth/id-token-revoked'
+    ) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid, expired, or disabled authentication session.',
+      })
+    }
 
-  return next(error)
-}
+    return next(error)
+  }
 }
