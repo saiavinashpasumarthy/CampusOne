@@ -1,5 +1,4 @@
 
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   ArrowLeft,
@@ -9,7 +8,6 @@ import {
   Database,
   UserRound,
   ChevronRight,
-  CheckCircle2,
   Settings2,
 } from 'lucide-react'
 
@@ -118,7 +116,11 @@ const cookieTypes = [
 ]
 
 export default function PrivacyPolicyPage() {
-  const [showCookieSettings, setShowCookieSettings] = useState(false)
+function openCookieSettings() {
+  window.dispatchEvent(
+    new Event('campusone:open-cookie-settings'),
+  )
+}
 
   const page = 'min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]'
 const card = 'glass-panel glass-interactive rounded-2xl'
@@ -252,11 +254,14 @@ const heading = 'text-[var(--color-text)]'
               </div>
 
               <p className={`text-sm leading-7 ${muted}`}>
-                Cookies and similar technologies may help websites remember
-                information and maintain secure sessions. CampusOne currently
-                documents only essential cookie functionality. Analytics and
-                advertising cookies are not currently part of this policy.
-              </p>
+  CampusOne uses browser storage and similar technologies to support
+  platform functionality. Firebase Authentication manages
+  authentication persistence in the browser, while CampusOne uses
+  local storage to remember your theme preference and consent
+  identifier. These mechanisms are not necessarily HTTP cookies.
+  Essential authentication and platform storage remain active.
+  Optional categories are disabled unless you explicitly enable them.
+</p>
 
               <div className="mt-6 space-y-4">
                 {cookieTypes.map((cookie) => (
@@ -280,38 +285,25 @@ const heading = 'text-[var(--color-text)]'
               </div>
 
               <div className="glass-panel-subtle mt-6 rounded-xl p-5">
-                <h3 className={`font-semibold ${heading}`}>
-                  Managing cookies
-                </h3>
-                <p className={`mt-2 text-sm leading-7 ${muted}`}>
-                  You can manage or clear cookies through your browser
-                  settings. Blocking essential cookies may affect sign-in or
-                  other core platform functionality.
-                </p>
+  <h3 className={`font-semibold ${heading}`}>
+    Managing privacy preferences
+  </h3>
 
-                <button
-                  type="button"
-                  onClick={() => setShowCookieSettings((current) => !current)}
-className="glass-button-primary mt-4 px-5 py-3 text-sm font-semibold">
-                  <Settings2 size={16} />
-                  {showCookieSettings ? 'Hide cookie information' : 'Cookie settings'}
-                  </button>
+  <p className={`mt-2 text-sm leading-7 ${muted}`}>
+    You can review, change, or withdraw your optional consent choices
+    at any time. Essential authentication and platform functionality
+    remains active.
+  </p>
 
-                {showCookieSettings && (
-                  <div className="glass-panel-subtle mt-4 rounded-xl p-4">
-                    <div className="flex items-center gap-2 font-semibold">
-                      <CheckCircle2 size={17} className="text-emerald-500" />
-                      Essential cookies
-                      <span className={`ml-auto text-xs ${muted}`}>Always active</span>
-                    </div>
-                    <p className={`mt-2 text-sm leading-6 ${muted}`}>
-                      Essential cookies support core functionality. This
-                      information panel is explanatory only; it does not
-                      currently change cookie preferences or store consent.
-                    </p>
-                  </div>
-                )}
-              </div>
+  <button
+    type="button"
+    onClick={openCookieSettings}
+    className="glass-button-primary mt-4 px-5 py-3 text-sm font-semibold"
+  >
+    <Settings2 size={16} />
+    Cookie settings
+  </button>
+</div>
             </section>
 
             <section className={`rounded-2xl border p-6 sm:p-8 ${card}`}>

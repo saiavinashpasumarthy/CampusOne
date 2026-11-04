@@ -17,25 +17,23 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsAndConditionsPage from './pages/TermsAndConditionsPage'
 import HelpCenterPage from './pages/HelpCenterPage'
 import SuperAdminUsersPage from './pages/SuperAdminUsersPage'
+import CookieConsent from '../src/components/cookieConsent'
 export default function App() {
-  return (
-    <BrowserRouter>
+  
+return (
+  <BrowserRouter>
+    <>
       <Routes>
         {/* Public landing page */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditionsPage />} />
         <Route path="/help" element={<HelpCenterPage />} />
+
         {/* Public authentication routes */}
         <Route path="/login" element={<LoginPage />} />
-        <Route
-          path="/forgot-password"
-          element={<ForgotPasswordPage />}
-        />
-        <Route
-          path="/register-college"
-          element={<RegisterPage />}
-        />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/register-college" element={<RegisterPage />} />
 
         <Route
           path="/pending-approval"
@@ -49,35 +47,18 @@ export default function App() {
 
         {/* Protected application routes */}
         <Route element={<ProtectedRoute />}>
-          {/* Super Admin shared layout */}
-          <Route
-            path="/super-admin"
-            element={<SuperAdminLayout />}
-          >
-            <Route
-              index
-              element={<SuperAdminDashboard />}
-            />
-
-            <Route
-              path="colleges"
-              element={<SuperAdminCollegesPage />}
-            />
-
+          <Route path="/super-admin" element={<SuperAdminLayout />}>
+            <Route index element={<SuperAdminDashboard />} />
+            <Route path="colleges" element={<SuperAdminCollegesPage />} />
             <Route
               path="colleges/:collegeId"
               element={<SuperAdminCollegeDetailsPage />}
             />
-
             <Route
               path="subscriptions"
               element={<SuperAdminSubscriptionsPage />}
             />
-
-            <Route
-  path="users"
-  element={<SuperAdminUsersPage />}
-/>
+            <Route path="users" element={<SuperAdminUsersPage />} />
 
             <Route
               path="activity-logs"
@@ -100,7 +81,6 @@ export default function App() {
             />
           </Route>
 
-          {/* College workspace */}
           <Route
             path="/college/*"
             element={
@@ -111,7 +91,6 @@ export default function App() {
             }
           />
 
-          {/* Warden workspace */}
           <Route
             path="/warden/*"
             element={
@@ -122,7 +101,6 @@ export default function App() {
             }
           />
 
-          {/* Student workspace */}
           <Route
             path="/student/*"
             element={
@@ -145,6 +123,10 @@ export default function App() {
           }
         />
       </Routes>
-    </BrowserRouter>
-  )
+
+      <CookieConsent />
+    </>
+  </BrowserRouter>
+)
+
 }

@@ -5,6 +5,7 @@ import helmet from 'helmet'
 import authRoutes from './routes/auth.routes.js'
 import superAdminRoutes from './routes/superAdmin.routes.js'
 import subscriptionRoutes from './routes/subscription.routes.js'
+import cookieConsentRoutes from './routes/cookieConsent.routes.js'
 const app = express()
 
 app.use(helmet())
@@ -25,6 +26,7 @@ app.get('/api/health', (_req, res) => {
   })
 })
 app.use('/api/auth', authRoutes)
+app.use('/api/cookie-consent', cookieConsentRoutes)
 app.use('/api/super-admin', superAdminRoutes)
 app.use('/api/super-admin/subscriptions', subscriptionRoutes)
 app.use((_req, res) => {
