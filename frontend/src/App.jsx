@@ -18,6 +18,7 @@ import TermsAndConditionsPage from './pages/TermsAndConditionsPage'
 import HelpCenterPage from './pages/HelpCenterPage'
 import SuperAdminUsersPage from './pages/SuperAdminUsersPage'
 import CookieConsent from '../src/components/cookieConsent'
+import SuperAdminActivityLogsPage from './pages/SuperAdminActivityLogsPage'
 export default function App() {
   
 return (
@@ -62,12 +63,7 @@ return (
 
             <Route
               path="activity-logs"
-              element={
-                <RoutePlaceholder
-                  title="Activity logs"
-                  description="Platform activity auditing will be implemented here."
-                />
-              }
+              element={<SuperAdminActivityLogsPage />}
             />
 
             <Route

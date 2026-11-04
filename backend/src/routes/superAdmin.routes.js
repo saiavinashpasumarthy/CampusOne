@@ -7,6 +7,8 @@ import User from '../models/user.js'
 import mongoose from 'mongoose'
 import { firebaseAuth } from '../config/firebase.js'
 import UserStatusAudit from '../models/userStatusAudit.js'
+import logActivity from '../utils/logActivity.js'
+import ActivityLog from '../models/activityLog.js'
 const router = Router()
 
 router.get(
@@ -240,7 +242,22 @@ router.patch(
         reason: reason.trim(),
         performedBy: req.user._id,
       })
-
+      await logActivity({
+  req,
+  action: action === 'SUSPEND' ? 'USER_SUSPENDED' : 'USER_REACTIVATED',
+  category: 'USER_MANAGEMENT',
+  description: `User ${targetUser.email} was ${action === 'SUSPEND' ? 'suspended' : 'reactivated'}.`,
+  targetType: 'USER',
+  targetId: targetUser._id,
+  collegeId: targetUser.collegeId ?? null,
+  metadata: {
+    previousStatus,
+    newStatus,
+    reason: reason.trim(),
+    targetEmail: targetUser.email,
+    targetRole: targetUser.role,
+  },
+})
       return res.status(200).json({
         success: true,
         message:
@@ -602,7 +619,7 @@ router.patch(
       let updatedCollege
       let updatedAdmin
 
-      await session.withTransaction(async () => {
+            await session.withTransaction(async () => {
         updatedCollege = await College.findOneAndUpdate(
           {
             _id: collegeId,
@@ -649,6 +666,23 @@ router.patch(
         if (!updatedAdmin) {
           throw new Error('College Admin status changed concurrently.')
         }
+      })
+
+      await logActivity({
+        req,
+        action: approved ? 'COLLEGE_APPROVED' : 'COLLEGE_REJECTED',
+        category: 'COLLEGE_MANAGEMENT',
+        description: `College "${updatedCollege.name}" was ${approved ? 'approved' : 'rejected'}.`,
+        targetType: 'COLLEGE',
+        targetId: updatedCollege._id,
+        collegeId: updatedCollege._id,
+        metadata: {
+          previousStatus: 'PENDING',
+          newStatus: updatedCollege.status,
+          collegeName: updatedCollege.name,
+          collegeCode: updatedCollege.code,
+          collegeAdminEmail: updatedAdmin.email,
+        },
       })
 
       return res.status(200).json({
@@ -700,7 +734,6 @@ router.patch(
     }
   },
 )
-
 
 router.patch(
   '/colleges/:collegeId/status',
@@ -776,7 +809,22 @@ if (!college) {
     message: `College is already ${existingCollege.status.toLowerCase()}.`,
   })
 }
-
+await logActivity({
+  req,
+  action: status === 'SUSPENDED'
+    ? 'COLLEGE_SUSPENDED'
+    : 'COLLEGE_REACTIVATED',
+  category: 'COLLEGE_MANAGEMENT',
+  description: `College "${college.name}" was ${status === 'SUSPENDED' ? 'suspended' : 'reactivated'}.`,
+  targetType: 'COLLEGE',
+  targetId: college._id,
+  collegeId: college._id,
+  metadata: {
+    previousStatus,
+    newStatus: college.status,
+    collegeName: college.name,
+  },
+})
       return res.status(200).json({
         success: true,
         message:
@@ -798,5 +846,151 @@ if (!college) {
     }
   },
 )
+router.get(
+  '/activity-logs',
+  authenticate,
+  authorizeRole('SUPER_ADMIN'),
+  async (req, res, next) => {
+    try {
+      const {
+        category,
+        action,
+        search,
+        from,
+        to,
+        page = '1',
+        limit = '20',
+      } = req.query
 
+      const pageNumber = Math.max(1, Number.parseInt(page, 10) || 1)
+      const pageSize = Math.min(
+        50,
+        Math.max(1, Number.parseInt(limit, 10) || 20),
+      )
+
+      const filter = {}
+
+      const allowedCategories = [
+        'AUTHENTICATION',
+        'USER_MANAGEMENT',
+        'COLLEGE_MANAGEMENT',
+        'SUBSCRIPTION',
+        'SYSTEM',
+        'SECURITY',
+      ]
+
+      const allowedActions = [
+        'USER_SUSPENDED',
+        'USER_REACTIVATED',
+        'COLLEGE_APPROVED',
+        'COLLEGE_REJECTED',
+        'COLLEGE_SUSPENDED',
+        'COLLEGE_REACTIVATED',
+      ]
+
+      if (category) {
+        if (!allowedCategories.includes(category)) {
+          return res.status(400).json({
+            success: false,
+            message: 'Invalid activity category.',
+          })
+        }
+
+        filter.category = category
+      }
+
+      if (action) {
+        if (!allowedActions.includes(action)) {
+          return res.status(400).json({
+            success: false,
+            message: 'Invalid activity action.',
+          })
+        }
+
+        filter.action = action
+      }
+
+      if (from || to) {
+        filter.createdAt = {}
+
+        if (from) {
+          const fromDate = new Date(from)
+
+          if (Number.isNaN(fromDate.getTime())) {
+            return res.status(400).json({
+              success: false,
+              message: 'Invalid start date.',
+            })
+          }
+
+          filter.createdAt.$gte = fromDate
+        }
+
+        if (to) {
+          const toDate = new Date(to)
+
+          if (Number.isNaN(toDate.getTime())) {
+            return res.status(400).json({
+              success: false,
+              message: 'Invalid end date.',
+            })
+          }
+
+          toDate.setHours(23, 59, 59, 999)
+          filter.createdAt.$lte = toDate
+        }
+
+        if (
+          filter.createdAt.$gte &&
+          filter.createdAt.$lte &&
+          filter.createdAt.$gte > filter.createdAt.$lte
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: 'Start date cannot be after end date.',
+          })
+        }
+      }
+
+      if (typeof search === 'string' && search.trim()) {
+        const escapedSearch = search
+          .trim()
+          .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+        filter.$or = [
+          { action: { $regex: escapedSearch, $options: 'i' } },
+          { description: { $regex: escapedSearch, $options: 'i' } },
+          { targetType: { $regex: escapedSearch, $options: 'i' } },
+        ]
+      }
+
+      const [logs, total] = await Promise.all([
+        ActivityLog.find(filter)
+          .populate('performedBy', 'email role')
+          .populate('collegeId', 'name code')
+          .sort({ createdAt: -1 })
+          .skip((pageNumber - 1) * pageSize)
+          .limit(pageSize)
+          .lean(),
+
+        ActivityLog.countDocuments(filter),
+      ])
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          logs,
+          pagination: {
+            page: pageNumber,
+            limit: pageSize,
+            total,
+            totalPages: Math.ceil(total / pageSize),
+          },
+        },
+      })
+    } catch (error) {
+      return next(error)
+    }
+  },
+)
 export default router
