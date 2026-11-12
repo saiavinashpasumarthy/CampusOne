@@ -1,4 +1,59 @@
+
 import ActivityLog from '../models/activityLog.js'
+
+const SENSITIVE_KEYS = new Set([
+  'password',
+  'passwordhash',
+  'newpassword',
+  'oldpassword',
+  'confirmpassword',
+  'token',
+  'accesstoken',
+  'refreshtoken',
+  'idtoken',
+  'authorization',
+  'otp',
+  'verificationcode',
+  'resetcode',
+  'secret',
+  'apikey',
+  'clientsecret',
+  'privatekey',
+])
+
+const normalizeKey = (key) =>
+  String(key).toLowerCase().replace(/[^a-z0-9]/g, '')
+
+const sanitizeMetadata = (value) => {
+  if (Array.isArray(value)) {
+    return value.map(sanitizeMetadata)
+  }
+
+  if (value && typeof value === 'object') {
+    // Avoid accidentally storing non-plain objects.
+    if (
+      Object.getPrototypeOf(value) !== Object.prototype &&
+      Object.getPrototypeOf(value) !== null
+    ) {
+      return '[REDACTED]'
+    }
+
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([key]) => !SENSITIVE_KEYS.has(normalizeKey(key)))
+        .map(([key, nestedValue]) => [
+          key,
+          sanitizeMetadata(nestedValue),
+        ]),
+    )
+  }
+
+  if (typeof value === 'string') {
+    return value.slice(0, 2000)
+  }
+
+  return value
+}
 
 const logActivity = async ({
   req,
@@ -26,7 +81,7 @@ const logActivity = async ({
       collegeId,
       targetType,
       targetId,
-      metadata,
+      metadata: sanitizeMetadata(metadata),
       ipAddress: req.ip || null,
       userAgent: req.get('user-agent') || null,
     })

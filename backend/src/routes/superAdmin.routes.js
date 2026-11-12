@@ -9,6 +9,10 @@ import { firebaseAuth } from '../config/firebase.js'
 import UserStatusAudit from '../models/userStatusAudit.js'
 import logActivity from '../utils/logActivity.js'
 import ActivityLog from '../models/activityLog.js'
+import {
+  getPlatformSettings,
+  updatePlatformSettings,
+} from '../controllers/platformSetting.controller.js'
 const router = Router()
 
 router.get(
@@ -992,5 +996,18 @@ router.get(
       return next(error)
     }
   },
+)
+router.get(
+  '/settings',
+  authenticate,
+  authorizeRole('SUPER_ADMIN'),
+  getPlatformSettings,
+)
+
+router.patch(
+  '/settings',
+  authenticate,
+  authorizeRole('SUPER_ADMIN'),
+  updatePlatformSettings,
 )
 export default router

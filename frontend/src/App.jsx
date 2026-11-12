@@ -19,6 +19,10 @@ import HelpCenterPage from './pages/HelpCenterPage'
 import SuperAdminUsersPage from './pages/SuperAdminUsersPage'
 import CookieConsent from '../src/components/cookieConsent'
 import SuperAdminActivityLogsPage from './pages/SuperAdminActivityLogsPage'
+import SuperAdminSettingsPage from './pages/SuperAdminSettingsPage'
+import CollegeAdminLayout from './layouts/CollegeAdminLayout'
+import CollegeAdminDashboard from './pages/CollegeAdminDashboard'
+import CollegeHostelsPage from './pages/CollegeHostelsPage'
 export default function App() {
   
 return (
@@ -68,24 +72,28 @@ return (
 
             <Route
               path="settings"
-              element={
-                <RoutePlaceholder
-                  title="Settings"
-                  description="Super Admin platform settings will be implemented here."
-                />
-              }
+              element={<SuperAdminSettingsPage />}
             />
           </Route>
 
-          <Route
-            path="/college/*"
-            element={
-              <RoutePlaceholder
-                title="College workspace"
-                description="The college workspace is not implemented yet."
-              />
-            }
-          />
+          <Route path="/college" element={<CollegeAdminLayout />}>
+  <Route
+    index
+    element={<CollegeAdminDashboard />}
+  />
+
+  <Route path="hostels" element={<CollegeHostelsPage />} />
+  <Route path="staff" element={<RoutePlaceholder title="Staff Management" description="Manage college wardens and staff." />} />
+  <Route path="students" element={<RoutePlaceholder title="Students" description="Manage student records." />} />
+  <Route path="admissions" element={<RoutePlaceholder title="Admissions" description="Review and approve admission applications." />} />
+  <Route path="allocations" element={<RoutePlaceholder title="Room Allocation" description="Manage student room allocations." />} />
+  <Route path="fees" element={<RoutePlaceholder title="Fees & Payments" description="Manage fees and payment records." />} />
+  <Route path="attendance" element={<RoutePlaceholder title="Attendance & Leave" description="Manage attendance and leave requests." />} />
+  <Route path="complaints" element={<RoutePlaceholder title="Complaints" description="Manage student complaints." />} />
+  <Route path="mess" element={<RoutePlaceholder title="Mess Management" description="Manage mess operations." />} />
+  <Route path="notices" element={<RoutePlaceholder title="Notices" description="Publish college notices." />} />
+  <Route path="settings" element={<RoutePlaceholder title="College Settings" description="Configure college preferences." />} />
+</Route>
 
           <Route
             path="/warden/*"
